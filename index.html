@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Gallery</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/bootstrap.min.css.map" rel="stylesheet">
+	<link href="css/bootstrap-theme.min.css" rel="stylesheet">
+	<link href="css/bootstrap-theme.min.css.map" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]--> 
+  </head>
+  <body>
+  <div class="container">
+	<div id = "main_pic" class="clearfix">
+		<div id="main_img"></div>
+		<div id="cursors">
+		<a id="left_cur" class="none">
+			<span class="glyphicon glyphicon-chevron-left"></span>
+		</a>
+		<a id="right_cur" class="none">
+			<span class="glyphicon glyphicon-chevron-right"></span>
+		</a>
+		</div>
+	</div>
+	<div class="mini clearfix"><div>
+	
+  </div>
+<script>
+var main_pic = document.querySelector("#main_img");
+var kol_img = 8;
+
+var left_cur = document.querySelector("#left_cur");
+var right_cur = document.querySelector("#right_cur");
+
+for(var i=1; i<=kol_img; i++){
+	//create main img
+    var img = document.createElement("img");
+	img.setAttribute('src',"img/normal/b"+i+".jpg");
+	img.setAttribute('class','img-responsive active');
+	img.setAttribute('data-num',i);
+	if(i>1)img.setAttribute('class','none');
+	main_pic.appendChild(img);
+	
+	var div = document.createElement("div");
+	div.setAttribute('class','miniature');
+	var img_m = document.createElement("img");
+	img_m.setAttribute('src',"img/small/b"+i+"m.jpg");
+	img_m.setAttribute('class','img-responsive');
+	img_m.setAttribute('data-num',i);
+	div.appendChild(img_m);
+	document.querySelector(".mini").appendChild(div);
+}
+
+document.querySelectorAll(".miniature img").forEach(function(el){
+	el.addEventListener('click', function(){
+		var num = el.dataset.num;
+		active()	
+		document.querySelectorAll("#main_img img").forEach(function(el){
+			if(el.dataset.num == num ){
+				elementHide(el);	
+			}
+		});
+
+	})
+});
+
+document.querySelector("#main_pic").addEventListener('mouseover', showCursor);
+
+function showCursor(){
+	var active = document.querySelector(".active");
+	var num = active.dataset.num;
+
+	if (!(kol_img==1 || num == 1))
+		left_cur.setAttribute('class','block')
+	else
+		left_cur.setAttribute('class','none')
+		
+	if (!(num == kol_img))
+		right_cur.setAttribute('class','block')
+	else
+		right_cur.setAttribute('class','none')
+}
+
+
+document.querySelector("#main_pic").addEventListener('mouseout', hideCursor);
+
+function hideCursor(){
+	left_cur.setAttribute('class','none')
+	right_cur.setAttribute('class','none')
+}
+
+
+left_cur.addEventListener('click', function(){
+	var num = active();	
+	document.querySelectorAll("#main_img img").forEach(function(el){
+		if(el.dataset.num == num-1 && num != 1 ){
+			elementHide(el);
+		}
+	});
+	showCursor()
+});
+
+right_cur.addEventListener('click', function(){
+	var num = active()
+	document.querySelectorAll("#main_img img").forEach(function(el){
+		if(el.dataset.num == (num+1) && num != kol_img){
+			elementHide(el);			
+		}
+	});
+	showCursor()
+	
+});
+
+
+function active(){
+	var active = document.querySelector(".active");
+	active.classList.remove("active");
+	active.setAttribute('class','none');
+	return parseInt(active.dataset.num);
+}
+
+function elementHide(el){
+	el.setAttribute('class','img-responsive active');
+	el.style.width = 0;
+	setTimeout(function(){
+		el.style.width = "400px";	
+	},500)	
+}
+
+</script>
+</body>
+</html>
